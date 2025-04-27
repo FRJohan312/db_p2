@@ -1,0 +1,17 @@
+[
+  {
+    "ciudad": "Madrid",
+    "personas_encuestadas": 500,
+    "transporte_mas_utilizado": "Metro"
+  },
+  {
+    "ciudad": "Barcelona",
+    "personas_encuestadas": 350,
+    "transporte_mas_utilizado": "Autob\u00fas"
+  },
+  {
+    "ciudad": "Sevilla",
+    "personas_encuestadas": 200,
+    "transporte_mas_utilizado": "Tramvia"
+  }
+]
