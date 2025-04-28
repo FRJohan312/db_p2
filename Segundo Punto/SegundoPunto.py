@@ -5,35 +5,48 @@ XML_FILE = 'catalogo.xml'
 JSON_FILE = 'catalogo.json'
 
 def inicializar_catalogo():
+    """
+    Permite al usuario crear manualmente el catálogo XML agregando productos.
+    Si el archivo ya existe, no lo sobreescribe.
+    """
     try:
-        ET.parse(XML_FILE)
+        ET.parse(XML_FILE)  # Intenta abrir el archivo XML
+        print("Ya hay un catalogo")
     except FileNotFoundError:
         root = ET.Element('catalogo')
 
-        productos = [
-            {'id': 'P001', 'nombre': 'Laptop', 'descripcion': 'Laptop de 14 pulgadas', 'precio': '1500', 'stock': '10'},
-            {'id': 'P002', 'nombre': 'Mouse', 'descripcion': 'Mouse inalámbrico', 'precio': '20', 'stock': '100'},
-            {'id': 'P003', 'nombre': 'Teclado', 'descripcion': 'Teclado mecánico', 'precio': '70', 'stock': '50'},
-            {'id': 'P004', 'nombre': 'Monitor', 'descripcion': 'Monitor 24 pulgadas', 'precio': '200', 'stock': '30'},
-            {'id': 'P005', 'nombre': 'Auriculares', 'descripcion': 'Auriculares Bluetooth', 'precio': '80', 'stock': '40'},
-        ]
+        print("Crear nuevo catalogo")
+        
+        while True:
+            # Solicitar datos al usuario
+            id_producto = input("ID del producto: ")
+            nombre = input("Nombre: ")
+            descripcion = input("Descripción: ")
+            precio = input("Precio: ")
+            stock = input("Stock: ")
 
-        for prod in productos:
-            producto = ET.SubElement(root, 'producto', id=prod['id'])
-            ET.SubElement(producto, 'nombre').text = prod['nombre']
-            ET.SubElement(producto, 'descripcion').text = prod['descripcion']
-            ET.SubElement(producto, 'precio').text = prod['precio']
-            ET.SubElement(producto, 'stock').text = prod['stock']
+            # Crear el producto en XML
+            producto = ET.SubElement(root, 'producto', id=id_producto)
+            ET.SubElement(producto, 'nombre').text = nombre
+            ET.SubElement(producto, 'descripcion').text = descripcion
+            ET.SubElement(producto, 'precio').text = precio
+            ET.SubElement(producto, 'stock').text = stock
 
-        ET.ElementTree(root).write(XML_FILE)
+            continuar = input("¿Deseas agregar otro producto? (s/n): ").lower()
+            if continuar != 's':
+                break
+        
+        # Guardar el archivo XML
+        ET.ElementTree(root).write(XML_FILE, encoding="utf-8", xml_declaration=True)
+        print("Catálogo creado correctamente.")
 
 def modificar_stock(id_producto, nuevo_stock):
     inicializar_catalogo()
 
     try:
-        nuevo_stock = int(nuevo_stock)  # Aseguramos que el nuevo stock sea un número entero
+        nuevo_stock = int(nuevo_stock)
     except ValueError:
-        print("Error: el stock debe ser un número entero.")
+        print("Ingrese un numero entero.")
         return
 
     tree = ET.parse(XML_FILE)
@@ -104,7 +117,7 @@ def buscar_producto(id_producto):
 def menu():
     while True:
         print("\n--- Menú Catálogo ---")
-        print("1. Crear catálogo XML")
+        print("1. Crear catálogo XML (agregar productos)")
         print("2. Modificar stock de producto")
         print("3. Exportar catálogo a JSON")
         print("4. Buscar producto en JSON")
@@ -114,7 +127,6 @@ def menu():
 
         if opcion == '1':
             inicializar_catalogo()
-            print("Catálogo creado o verificado.")
 
         elif opcion == '2':
             id_producto = input("ID del producto: ")

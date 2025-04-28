@@ -4,17 +4,35 @@ import xml.etree.ElementTree as ET
 JSON_FILE = 'encuestas.json'
 XML_FILE = 'resumen_encuestas.xml'
 
-# Crear archivo JSON con las encuestas
+# Crear archivo JSON con las encuestas ingresadas por el usuario
 def crear_encuestas_json():
-    encuestas = [
-        {'ciudad': 'Madrid', 'personas_encuestadas': 500, 'transporte_mas_utilizado': 'Metro'},
-        {'ciudad': 'Barcelona', 'personas_encuestadas': 350, 'transporte_mas_utilizado': 'Autobús'},
-        {'ciudad': 'Sevilla', 'personas_encuestadas': 200, 'transporte_mas_utilizado': 'Tramvia'}
-    ]
-    
+    encuestas = []
+
+    print("Vamos a ingresar encuestas. Puedes ingresar varias ciudades.")
+
+    while True:
+        ciudad = input("Ciudad: ")
+        try:
+            personas_encuestadas = int(input("Número de personas encuestadas: "))
+        except ValueError:
+            print("Error: Debes ingresar un número para personas encuestadas.")
+            continue
+        transporte_mas_utilizado = input("Transporte más utilizado: ")
+
+        encuesta = {
+            'ciudad': ciudad,
+            'personas_encuestadas': personas_encuestadas,
+            'transporte_mas_utilizado': transporte_mas_utilizado
+        }
+        encuestas.append(encuesta)
+
+        continuar = input("¿Deseas agregar otra encuesta? (s/n): ").lower()
+        if continuar != 's':
+            break
+
     with open(JSON_FILE, 'w') as f:
         json.dump(encuestas, f, indent=2)
-    print("Archivo encuestas.json creado.")
+    print(f"Archivo {JSON_FILE} creado correctamente.")
 
 # Generar resumen en XML
 def generar_resumen_xml():
